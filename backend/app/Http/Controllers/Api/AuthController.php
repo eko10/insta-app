@@ -3,41 +3,42 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Services\AuthService;
+use App\Helpers\ApiResponse;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Resources\AuthResource;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    protected $authService;
+
+    public function __construct(AuthService $authService)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
-
-        $token = $user->createToken('instaapp-token')->plainTextToken;
-
-        return response()->json([
-            'token' => $token,
-            'user' => $user
-        ]);
+        $this->authService = $authService;
     }
 
-    public function login(Request $request)
+    public function register(RegisterRequest $request)
     {
-        if(!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Invalid Email or Password'], 401);
+        $result = $this->authService->register($request->validated());
+
+        return ApiResponse::success(
+            new AuthResource($result['user'], $result['token']),
+            'Register success'
+        );
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $result = $this->authService->login($request->validated());
+
+        if (!$result) {
+            return ApiResponse::error('Invalid Email or Password',401);
         }
 
-        $user = Auth::user();
-
-        $token = $user->createToken('instaapp-token')->plainTextToken;
-
-        return response()->json([
-            'token' => $token,
-            'user' => $user
-        ]);
+        return ApiResponse::success(
+            new AuthResource($result['user'], $result['token']),
+            'Login success'
+        );
     }
 }
