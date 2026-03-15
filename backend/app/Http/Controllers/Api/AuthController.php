@@ -32,8 +32,8 @@ class AuthController extends Controller
     {
         $result = $this->authService->login($request->validated());
 
-        if (!$result) {
-            return ApiResponse::error('Invalid Email or Password',401);
+        if(!$result) {
+            return ApiResponse::error('Invalid Email or Password', 401);
         }
 
         return ApiResponse::success(

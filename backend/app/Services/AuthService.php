@@ -29,7 +29,7 @@ class AuthService
     {
         $user = $this->authRepository->login($credentials);
 
-        if (!$user) {
+        if(!$user) {
             return null;
         }
 

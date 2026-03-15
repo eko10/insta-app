@@ -19,7 +19,7 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function login(array $credentials)
     {
-        if (!Auth::attempt($credentials)) {
+        if(!Auth::attempt($credentials)) {
             return null;
         }
 
