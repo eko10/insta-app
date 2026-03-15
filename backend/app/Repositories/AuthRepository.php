@@ -1,9 +1,9 @@
 <?php 
 
-namespace App\Repository;
+namespace App\Repositories;
 
 use App\Models\User;
-use App\Repository\Interfaces\AuthRepositoryInterface;
+use App\Repositories\Interfaces\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 
 class AuthRepository implements AuthRepositoryInterface
