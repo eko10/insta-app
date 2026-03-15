@@ -2,43 +2,46 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Services\PostService;
 
 class PostController extends Controller
 {
-    public function index()
+    protected $postService;
+
+    public function __construct(PostService $postService)
     {
-        return Post::with('user', 'likes', 'comments')->latest()->paginate(10);
+        $this->postService = $postService;
     }
 
-    public function store(Request $request)
+    public function index()
     {
-        $path = $request->file('image')->store('posts', 'public');
+        return PostResource::collection(
+            $this->postService->index()
+        );
+    }
 
-        $post = Post::create([
-            'user_id' => auth()->id(),
-            'caption' => $request->caption,
-            'image' => $path
-        ]);
+    public function store(PostRequest $request)
+    {
+        $data = $request->validated();
 
-        return response()->json($post);
+        $post = $this->postService->create($data);
+
+        return new PostResource($post);
     }
 
     public function destroy(Post $post)
     {
-        if($post->user_id != auth()->id()){
-            return response()->json(['message' => 'Forbidden'], 403);
+        if($post->user_id != auth()->user()->id) {
+            return ApiResponse::error('Forbidden access', 403);
         }
 
-        if ($post->image && Storage::disk('public')->exists($post->image)) {
-            Storage::disk('public')->delete($post->image);
-        }
+        $this->postService->delete($post);
 
-        $post->delete();
-
-        return response()->json(['message' => 'post deleted']);
+        return ApiResponse::success(null, 'Post deleted');
     }
 }
