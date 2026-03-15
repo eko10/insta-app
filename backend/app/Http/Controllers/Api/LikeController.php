@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Like;
+use App\Services\LikeService;
 
 class LikeController extends Controller
 {
+    protected $likeService;
+
+    public function __construct(LikeService $likeService)
+    {
+        $this->likeService = $likeService;
+    }
+
     public function like($postId)
     {
-        Like::firstOrCreate([
-            'user_id' => auth()->id(),
-            'post_id' => $postId
-        ]);
+        $liked = $this->likeService->toggleLike($postId);
 
-        return response()->json(['message' => 'liked this post']);
+        return ApiResponse::success([
+            'liked' => $liked
+        ]);
     }
 }
