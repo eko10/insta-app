@@ -36,7 +36,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        if($post->user_id != auth()->user()->id) {
+        if($post->user_id != auth()->id) {
             return ApiResponse::error('Forbidden access', 403);
         }
 

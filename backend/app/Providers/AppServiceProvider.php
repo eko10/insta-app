@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repositories\AuthRepository;
+use App\Repositories\CommentRepository;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
+use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\LikeRepositoryInterface;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\LikeRepository;
@@ -32,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             LikeRepositoryInterface::class,
             LikeRepository::class,
+        );
+
+        $this->app->bind(
+            CommentRepositoryInterface::class,
+            CommentRepository::class,
         );
     }
 

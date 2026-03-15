@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Comment;
-use Illuminate\Http\Request;
+use App\Http\Requests\CommentRequest;
+use App\Http\Resources\CommentResource;
+use App\Services\CommentService;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, $postId)
-    {
-        return Comment::create([
-            'user_id' => auth()->id(),
-            'post_id' => $postId,
-            'comment' => $request->comment
-        ]);
+    protected $commentService;
 
-        return response()->json(['message' => 'saved comment']);
+    public function __construct(CommentService $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
+    public function store(CommentRequest $request,$postId)
+    {
+        $comment = $this->commentService->create($postId,$request->comment);
+
+        return new CommentResource($comment);
     }
 }
