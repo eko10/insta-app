@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -15,6 +16,22 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
+
+        $token = $user->createToken('instaapp-token')->plainTextToken;
+
+        return response()->json([
+            'token' => $token,
+            'user' => $user
+        ]);
+    }
+
+    public function login(Request $request)
+    {
+        if(!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Invalid Email or Password'], 401);
+        }
+
+        $user = Auth::user();
 
         $token = $user->createToken('instaapp-token')->plainTextToken;
 
