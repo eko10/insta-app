@@ -9,7 +9,15 @@ class PostRepository implements PostRepositoryInterface
 {
     public function index()
     {
-        return Post::with(['user','likes','comments'])->latest()->paginate(10);
+        return Post::with(['user','comments.user'])
+            ->withCount(['likes','comments'])
+            ->withExists([
+                'likes as is_liked' => function ($query) {
+                    $query->where('user_id', auth()->id());
+                }
+            ])
+            ->latest()
+            ->paginate(10);
     }
 
     public function create(array $data)
