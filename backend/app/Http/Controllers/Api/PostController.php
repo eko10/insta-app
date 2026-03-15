@@ -25,4 +25,15 @@ class PostController extends Controller
 
         return response()->json($post);
     }
+
+    public function destroy(Post $post)
+    {
+        if($post->user_id != auth()->id()){
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $post->delete();
+
+        return response()->json(['message' => 'post deleted']);
+    }
 }
