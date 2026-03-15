@@ -39,9 +39,9 @@ class PostResource extends JsonResource
                 ];
             }),
             'caption' => $this->caption,
-            'image' => $this->image,
-            'total_comments' => $this->comments_count,
-            'total_likes' => $this->likes_count,
+            'image' => $this->image ? asset('storage/'.$this->image) : null,
+            'total_comments' => (int) $this->comments_count,
+            'total_likes' => (int) $this->likes_count,
             'is_liked' => (bool) $this->is_liked,
             'created_at' => $this->created_at ? $this->created_at->diffForHumans() : null,
         ];

@@ -27,16 +27,14 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-        $data = $request->validated();
-
-        $post = $this->postService->create($data);
+        $post = $this->postService->create($request);
 
         return new PostResource($post);
     }
 
     public function destroy(Post $post)
     {
-        if($post->user_id != auth()->id) {
+        if($post->user_id != auth()->id()) {
             return ApiResponse::error('Forbidden access', 403);
         }
 
