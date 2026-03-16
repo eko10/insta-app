@@ -13,7 +13,9 @@ class CommentResource extends JsonResource
             'user' => $this->user ? [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
+                'username' => $this->user->username,
                 'email' => $this->user->email,
+                'avatar' => $this->user->avatar_url,
             ] : null,
             'comment' => $this->comment,
             'created_at' => $this->created_at ? $this->created_at->diffForHumans() : null,

@@ -13,7 +13,9 @@ class PostResource extends JsonResource
             'author' => $this->user ? [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
+                'username' => $this->user->username,
                 'email' => $this->user->email,
+                'avatar' => $this->user->avatar_url,
             ] : null,
             'comments' => $this->comments->map(function($comment) {
                 return [
@@ -21,7 +23,9 @@ class PostResource extends JsonResource
                     'user' => ($comment->user) ? [
                         'id' => $comment->user->id,
                         'name' => $comment->user->name,
+                        'username' => $comment->user->username,
                         'email' => $comment->user->email,
+                        'avatar' => $comment->user->avatar_url,
                     ] : null,
                     'comment' => $comment->comment,
                     'created_at' => $comment->created_at->diffForHumans(),
@@ -33,7 +37,9 @@ class PostResource extends JsonResource
                     'user' => ($like->user) ? [
                         'id' => $like->user->id,
                         'name' => $like->user->name,
+                        'username' => $like->user->username,
                         'email' => $like->user->email,
+                        'avatar' => $like->user->avatar_url,
                     ] : null,
                     'created_at' => $like->created_at->diffForHumans(),
                 ];
