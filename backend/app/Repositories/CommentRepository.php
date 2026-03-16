@@ -19,6 +19,10 @@ class CommentRepository implements CommentRepositoryInterface
 
     public function getByPost($postId)
     {
-        return Comment::where('post_id', $postId)->latest()->get();
+        if (!Post::where('id', $postId)->exists()) {
+            throw new \Exception('Post not found');
+        }
+
+        return Comment::where('post_id', $postId)->latest()->paginate(10);
     }
 }

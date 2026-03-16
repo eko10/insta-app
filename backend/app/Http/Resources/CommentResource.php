@@ -10,6 +10,11 @@ class CommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user' => $this->user ? [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ] : null,
             'comment' => $this->comment,
             'created_at' => $this->created_at ? $this->created_at->diffForHumans() : null,
         ];

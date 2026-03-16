@@ -22,7 +22,7 @@ class CommentService
         ]);
     }
 
-    public function getComments($postId)
+    public function getByPost($postId)
     {
         return $this->commentRepository->getByPost($postId);
     }

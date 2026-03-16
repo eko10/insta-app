@@ -16,10 +16,17 @@ class CommentController extends Controller
         $this->commentService = $commentService;
     }
 
-    public function store(CommentRequest $request,$postId)
+    public function store(CommentRequest $request, $postId)
     {
-        $comment = $this->commentService->create($postId,$request->comment);
+        $comment = $this->commentService->create($postId, $request->comment);
 
         return new CommentResource($comment);
+    }
+
+    public function getByPost($postId)
+    {
+        $comment = $this->commentService->getByPost($postId);
+        // dd($comment);
+        return CommentResource::collection($comment);
     }
 }
